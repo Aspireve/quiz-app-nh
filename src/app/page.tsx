@@ -1,101 +1,68 @@
+"use client";
+
+import QuestionDisplay from "@/components/QuestionDisplay";
+import { useUser } from "@/context/UserContext";
+import { fetchUserQuestions } from "@/functions/fetchUserQuestions";
+import { Question } from "@/types/questions";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const { user } = useUser();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [totalLength, settotalLength] = useState(0);
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    if (user) {
+      fetchUserQuestions(user?.uid).then((data) => {
+        const qs = data.map((q) => ({
+          id: q.id,
+          question: q.question,
+          options: q.options,
+        }));
+        setQuestions(qs);
+        setCurrentStep(1);
+        settotalLength(qs.length);
+      });
+    }
+  }, [user]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="w-[80%] md:w-full max-w-[30rem]  m-auto h-full min-h-[100dvh]">
+      <nav className="w-full text-white my-5 text-center">Live Quiz</nav>
+      <div className="m-auto">
         <Image
-          className="dark:invert"
-          src="/next.svg"
+          className="rounded-xl shadow-lg"
+          src="/Hyperloop-India.png"
           alt="Next.js logo"
-          width={180}
-          height={38}
+          width={1000}
+          height={100}
           priority
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        <h1 className="text-white mt-5 text-lg">Hyperloop Quiz</h1>
+        <div className="flex overflow-x-scroll mt-3 gap-3 pb-5">
+          {Array.from({ length: totalLength }).map((_, index) => (
+            <div
+              key={index}
+              className={`w-10 transition-all duration-300 h-10 text-center rounded-full bg-[#393f6e] ${
+                currentStep === index + 1
+                  ? "bg-gradient-to-bl from-[#c23fbc] to-[#b71e84]"
+                  : ""
+              } shadow-xl flex items-center justify-center text-white shrink-0`}
+            >
+              {index + 1}
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        {questions.length > 0 && (
+          <QuestionDisplay
+            setCurrentStep={setCurrentStep}
+            q={questions[currentStep]}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        )}
+      </div>
     </div>
   );
 }
