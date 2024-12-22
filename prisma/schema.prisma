@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL") // Add your Supabase PostgreSQL URL in the .env file
 }
@@ -16,6 +16,7 @@ model User {
   assignedQuestions UserQuestions[]
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
+  points            Int             @default(0)
 }
 
 model Question {

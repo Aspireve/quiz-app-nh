@@ -46,11 +46,12 @@ export default function Home() {
           {Array.from({ length: totalLength }).map((_, index) => (
             <div
               key={index}
-              className={`w-10 transition-all duration-300 h-10 text-center rounded-full bg-[#393f6e] ${
+              className={`cursor-pointer w-10 transition-all duration-300 h-10 text-center rounded-full bg-[#393f6e] ${
                 currentStep === index + 1
                   ? "bg-gradient-to-bl from-[#c23fbc] to-[#b71e84]"
                   : ""
               } shadow-xl flex items-center justify-center text-white shrink-0`}
+              onClick={() => setCurrentStep(index + 1)}
             >
               {index + 1}
             </div>
@@ -58,8 +59,11 @@ export default function Home() {
         </div>
         {questions.length > 0 && (
           <QuestionDisplay
+            key={`que-${currentStep}`}
+            currentStep={currentStep}
+            isLast={currentStep === totalLength}
             setCurrentStep={setCurrentStep}
-            q={questions[currentStep]}
+            q={questions[currentStep - 1]}
           />
         )}
       </div>
