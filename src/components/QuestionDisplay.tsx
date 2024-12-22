@@ -9,6 +9,7 @@ type QuestionDisplayProps = {
     options: string[];
   };
   setCurrentStep: (value: number | ((prev: number) => number)) => void;
+  setUserScore: () => void;
 };
 
 const QuestionDisplay = ({
@@ -16,10 +17,11 @@ const QuestionDisplay = ({
   setCurrentStep,
   isLast,
   currentStep,
+  setUserScore,
 }: QuestionDisplayProps) => {
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const onSelectOption = (option: number) => {
+  const onSelectOption = (option: string) => {
     setSelectedOption(option);
   };
 
@@ -44,6 +46,16 @@ const QuestionDisplay = ({
       });
     }, 300); // Allow ripple animation to play
   };
+
+  const finalSubmit = () => {
+    setCurrentStep((prevStep) => {
+      const userData = JSON.parse(localStorage.getItem("answers") || "{}");
+      userData[prevStep] = selectedOption;
+      localStorage.setItem("answers", JSON.stringify(userData));
+      return prevStep;
+    })
+    setUserScore()
+  }
 
   const createRipple = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -96,11 +108,11 @@ const QuestionDisplay = ({
             <div
               key={`opt-${index}`}
               className={`bg-[#383e6e] cursor-pointer transition-all duration-300 text-center py-4 rounded-md text-white shadow-xl ${
-                selectedOption === index
+                selectedOption === String.fromCharCode(65 + index)
                   ? "bg-gradient-to-br from-[#e25a9d] to-[#894ba8]"
                   : ""
               }`}
-              onClick={() => onSelectOption(index)}
+              onClick={() => onSelectOption(String.fromCharCode(65 + index))}
             >
               {option}
             </div>
@@ -112,7 +124,7 @@ const QuestionDisplay = ({
               ? "bg-gray-500 cursor-not-allowed scale-y-90 opacity-50"
               : "bg-gradient-to-r from-[#347cca] to-[#3e9fff] scale-100 opacity-100"
           }`}
-          onClick={onSubmit}
+          onClick={isLast ? finalSubmit : onSubmit}
           disabled={selectedOption === null}
         >
           {isLast ? "Submit" : "Next"}

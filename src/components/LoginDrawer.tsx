@@ -7,7 +7,6 @@ import {
 import { Button } from "./ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -71,18 +70,19 @@ export default function LoginDrawer({
     <Drawer open={modalDisplay}>
       {modalDisplay && <div className="fixed inset-0 backdrop-blur-sm z-40" />}
       <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>You need to Sign In to answer the Quiz</DrawerTitle>
-          <DrawerDescription>
-            This enables us to track your points for the leaderboard.
-          </DrawerDescription>
-        </DrawerHeader>
-        <DrawerFooter>
-          <Button onClick={signIn}>Sign In with Google</Button>
-          <DrawerClose>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
+        <div className="max-w-[500px] m-auto w-[95%]">
+          <DrawerHeader>
+            <DrawerTitle className="leading-6">
+              You need to Sign In to answer the Quiz
+            </DrawerTitle>
+            <DrawerDescription>
+              This enables us to track your points for the leaderboard.
+            </DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button onClick={signIn}>Sign In with Google</Button>
+          </DrawerFooter>
+        </div>
       </DrawerContent>
     </Drawer>
   );

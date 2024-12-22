@@ -1,7 +1,9 @@
-"use client"
+"use client";
 
 import LoginDrawer from "@/components/LoginDrawer";
+import { fetchUserByUid } from "@/functions/fetchUserById";
 import { User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -30,12 +32,19 @@ export function useUser() {
 export function UserProvider({ children }: UserProps) {
   const [modalDisplay, setModalDisplay] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) {
       setModalDisplay(true);
     } else {
       setModalDisplay(false);
+      fetchUserByUid(user.uid).then((data) => {
+        console.log(data)
+        if (data?.points !== 0) {
+          router.push("/points");
+        }
+      });
     }
   }, [user]);
 
@@ -43,10 +52,7 @@ export function UserProvider({ children }: UserProps) {
     <UserContext.Provider value={{ user }}>
       <>
         {children}
-        <LoginDrawer
-          modalDisplay={modalDisplay}
-          setUser={setUser}
-        />
+        <LoginDrawer modalDisplay={modalDisplay} setUser={setUser} />
       </>
     </UserContext.Provider>
   );
