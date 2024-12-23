@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
-import { AnimatePresence } from "framer-motion";
+// import { AnimatePresence } from "framer-motion";
 import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
@@ -30,10 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full bg-gradient-to-br from-[#4e558d] to-[#161931]`}
       >
-        <AnimatePresence mode="wait">
+        {/* <AnimatePresence mode="wait"> */}
           <UserProvider>{children}</UserProvider>
           <Toaster />
-        </AnimatePresence>
+        {/* </AnimatePresence> */}
       </body>
     </html>
   );

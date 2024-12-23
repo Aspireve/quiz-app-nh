@@ -44,7 +44,7 @@ const Page = () => {
             {(toppers?.[1]?.displayName || "NA").split(" ")[0]}
           </h4>
           <h4 className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent font-bold text-2xl text-center">
-            {toppers?.[1]?.displayName || 0}
+            {toppers?.[1]?.points || 0}
           </h4>
         </motion.div>
         <motion.div
@@ -81,10 +81,10 @@ const Page = () => {
             <Avatar className="h-20 w-20 border-4 border-white">
               <AvatarImage
                 src={
-                  toppers?.[1]?.photoURL || "https://github.com/Aspireve.png"
+                  toppers?.[2]?.photoURL || "https://github.com/Aspireve.png"
                 }
               />
-              <AvatarFallback>{toppers?.[1]?.displayName}</AvatarFallback>
+              <AvatarFallback>{toppers?.[2]?.displayName}</AvatarFallback>
             </Avatar>
             <div className="shadow-lg h-10 w-10  text-sm font-semibold bg-[#d5b3ff] p-2 flex items-center rounded-full justify-center absolute bottom-0 right-1/2 translate-y-1/2 translate-x-1/2">
               3<sup>rd</sup>

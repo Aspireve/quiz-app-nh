@@ -28,9 +28,9 @@ const Page = () => {
       <div className="z-10 px-6 py-6 rounded-xl text-white flex items-center justify-center flex-col gap-4 w-full backdrop-blur-md">
         <Avatar className="h-28 w-28 border-4 border-white">
           <AvatarImage
-            src={user?.photoURL || "https://github.com/Aspireve.png"}
+            src={`${user?.photoURL || "https://github.com/Aspireve.png"}?dma_cps=sypham`}
           />
-          <AvatarFallback>{user?.displayName || "MO"}</AvatarFallback>
+          {/* <AvatarFallback>{user?.displayName || "MO"}</AvatarFallback> */}
         </Avatar>
         <div className="m-auto text-center flex flex-col gap-2">
           <h2 className="font-normal text-sm">You won</h2>
