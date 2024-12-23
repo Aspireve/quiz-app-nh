@@ -94,7 +94,7 @@ const Page = () => {
             {(toppers?.[2]?.displayName || "NA").split(" ")[0]}
           </h4>
           <h4 className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent font-bold text-2xl text-center">
-            {toppers?.[2]?.displayName || 0}
+            {toppers?.[2]?.points || 0}
           </h4>
         </motion.div>
       </div>
