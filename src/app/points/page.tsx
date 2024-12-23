@@ -30,7 +30,7 @@ const Page = () => {
           <AvatarImage
             src={`${user?.photoURL || "https://github.com/Aspireve.png"}?dma_cps=sypham`}
           />
-          {/* <AvatarFallback>{user?.displayName || "MO"}</AvatarFallback> */}
+          <AvatarFallback>{user?.displayName || "MO"}</AvatarFallback>
         </Avatar>
         <div className="m-auto text-center flex flex-col gap-2">
           <h2 className="font-normal text-sm">You won</h2>
