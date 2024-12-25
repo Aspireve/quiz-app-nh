@@ -4,16 +4,17 @@ import QuestionDisplay from "@/components/QuestionDisplay";
 import { useUser } from "@/context/UserContext";
 import { fetchUserQuestions } from "@/functions/fetchUserQuestions";
 import { setScoreWithUId } from "@/functions/setScore";
-import { Question } from "@/types/questions";
+import { toast } from "@/hooks/use-toast";
+import { Question } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { user } = useUser();
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [totalLength, settotalLength] = useState(0);
+  const { user } = useUser();
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [totalLength, settotalLength] = useState<number>(0);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answerArray, setAnswerArray] = useState<string[]>([
     "",
@@ -30,15 +31,10 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      fetchUserQuestions(user?.uid).then((data) => {
-        const qs = data.map((q) => ({
-          id: q.id,
-          question: q.question,
-          options: q.options,
-        }));
-        setQuestions(qs);
+      fetchUserQuestions(user.uid).then((data) => {
+        setQuestions(data);
         setCurrentStep(1);
-        settotalLength(qs.length);
+        settotalLength(data.length);
       });
     }
   }, [user]);
@@ -46,15 +42,15 @@ export default function Home() {
   useEffect(() => {
     const answered = JSON.parse(localStorage.getItem("answers") || "{}");
     if (answered) {
-      const updatedArray = [...answerArray];
-      console.log("a", Object.keys(answered));
-      Object.keys(answered).forEach((key) => {
-        if (answered[key] !== null) {
-          updatedArray[parseInt(key) - 1] = answered[key];
-        }
+      setAnswerArray((prev) => {
+        const updatedArray = [...prev];
+        Object.keys(answered).forEach((key) => {
+          if (answered[key] !== null) {
+            updatedArray[parseInt(key) - 1] = answered[key];
+          }
+        });
+        return updatedArray;
       });
-      console.log(updatedArray);
-      setAnswerArray(updatedArray);
     }
   }, [currentStep]);
 
@@ -69,9 +65,8 @@ export default function Home() {
       });
     }
     if (user) {
-      const score = await setScoreWithUId(user.uid, updatedArray);
+      await setScoreWithUId(user.uid, updatedArray);
       router.push(`/points`);
-      console.log(score);
     }
   };
 
@@ -98,7 +93,17 @@ export default function Home() {
                   ? "bg-gradient-to-bl from-[#c23fbc] to-[#b71e84]"
                   : answerArray[index] && "bg-[#1e2139]"
               } shadow-xl flex items-center justify-center text-white shrink-0`}
-              onClick={() => setCurrentStep(index + 1)}
+              onClick={() => {
+                if (currentStep > index + 1) {
+                  toast({
+                    title: "Cannot view Question Now",
+                    description:
+                      "You are trying to view an unlocked question.",
+                    color: "success",
+                  });
+                }
+                setCurrentStep(index + 1);
+              }}
             >
               {index + 1}
             </div>

@@ -26,6 +26,7 @@ export default function LoginDrawer({
   modalDisplay,
   setUser,
 }: LoginDrawerProps) {
+  
   const auth = getAuth(app);
   const { toast } = useToast();
   const provider = new GoogleAuthProvider();
@@ -33,18 +34,9 @@ export default function LoginDrawer({
   const signIn = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
         const user = result.user;
-        console.log(user, token);
         setUser(user); // Set the authenticated user
-        registerUser({
-          uid: user.uid || "Default",
-          displayName: user.displayName || "Default",
-          photoURL: user.photoURL || "Default",
-          email: user.email || "Default",
-        }).then((data) => {
-          console.log(data);
+        registerUser(user).then(() => {
           toast({
             title: "User Registered",
             description: "User Registered and questions assigned successfully",
@@ -53,15 +45,10 @@ export default function LoginDrawer({
         });
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData?.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        console.error("Sign-in error:", {
-          errorCode,
-          errorMessage,
-          email,
-          credential,
+        toast({
+          title: "Error",
+          description: error.message,
+          color: "error",
         });
       });
   };

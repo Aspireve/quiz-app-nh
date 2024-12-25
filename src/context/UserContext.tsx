@@ -2,7 +2,8 @@
 
 import LoginDrawer from "@/components/LoginDrawer";
 import { fetchUserByUid } from "@/functions/fetchUserById";
-import { User } from "firebase/auth";
+import { app } from "@/lib/firebase";
+import { getAuth, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -30,23 +31,24 @@ export function useUser() {
 }
 
 export function UserProvider({ children }: UserProps) {
-  const [modalDisplay, setModalDisplay] = useState(false);
+  const [modalDisplay, setModalDisplay] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const auth = getAuth(app);
 
   useEffect(() => {
-    if (!user) {
+    if (auth.currentUser === null) {
       setModalDisplay(true);
     } else {
       setModalDisplay(false);
-      fetchUserByUid(user.uid).then((data) => {
-        console.log(data)
+      fetchUserByUid(auth.currentUser.uid).then((data) => {
         if (data?.points !== 0) {
           router.push("/points");
         }
       });
     }
-  }, [user]);
+    // fix use Effect hook
+  }, [auth.currentUser, router]);
 
   return (
     <UserContext.Provider value={{ user }}>

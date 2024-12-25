@@ -1,4 +1,4 @@
-import { Question } from "@/types/questions";
+import { Question } from "@prisma/client";
 
 export const fetchUserQuestions = async (uid: string): Promise<Question[]> => {
   try {

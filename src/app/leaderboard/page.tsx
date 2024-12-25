@@ -11,7 +11,9 @@ const Page = () => {
 
   useEffect(() => {
     fetchToppers().then((data) => {
-      setToppers(data);
+      if (data) {
+        setToppers(data);
+      }
     });
   }, []);
   return (
@@ -99,7 +101,7 @@ const Page = () => {
         </motion.div>
       </div>
       <div className="w-full mt-7">
-        {toppers?.slice(2)?.map((user, index) => (
+        {toppers?.slice(3)?.map((user, index) => (
           <motion.div
             key={index}
             initial={{ x: -50, opacity: 0 }}
@@ -114,13 +116,15 @@ const Page = () => {
             <div className="flex flex-row gap-4 text-white items-center">
               <p>{index + 4}</p>
               <Avatar className="h-10 w-10 border-2 border-white">
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage
+                  src={user.photoURL || "https://github.com/shadcn.png"}
+                />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <p>Steve Fernandes</p>
+              <p>{user.displayName.split(" ")[0]}</p>
             </div>
             <p className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent">
-              1500
+              {user.points}
             </p>
           </motion.div>
         ))}

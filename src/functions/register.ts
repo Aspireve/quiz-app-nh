@@ -1,11 +1,6 @@
-interface RegisterUserPayload {
-  uid: string;
-  displayName: string;
-  photoURL: string;
-  email: string;
-}
+import { User } from "firebase/auth";
 
-export const registerUser = async (userData: RegisterUserPayload) => {
+export const registerUser = async (userData: User) => {
   try {
     const response = await fetch("/api/register", {
       method: "POST",

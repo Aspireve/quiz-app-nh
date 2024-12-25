@@ -37,13 +37,11 @@ export default async function handler(
     // Extract the questions
     const questions = userWithQuestions.assignedQuestions.map((assignment) => ({
       id: assignment.question.id,
-      question: assignment.question.questionText,
-      options: [
-        assignment.question.optionA,
-        assignment.question.optionB,
-        assignment.question.optionC,
-        assignment.question.optionD,
-      ],
+      questionText: assignment.question.questionText,
+      optionA: assignment.question.optionA,
+      optionB: assignment.question.optionB,
+      optionC: assignment.question.optionC,
+      optionD: assignment.question.optionD,
     }));
 
     res.status(200).json({ questions });

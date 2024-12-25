@@ -1,13 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Question } from "@prisma/client";
 
 type QuestionDisplayProps = {
   currentStep: number;
   isLast: boolean;
-  q: {
-    question: string;
-    options: string[];
-  };
+  q: Question;
   setCurrentStep: (value: number | ((prev: number) => number)) => void;
   setUserScore: () => void;
 };
@@ -20,6 +18,8 @@ const QuestionDisplay = ({
   setUserScore,
 }: QuestionDisplayProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const options = [q.optionA, q.optionB, q.optionC, q.optionD]
 
   const onSelectOption = (option: string) => {
     setSelectedOption(option);
@@ -88,7 +88,7 @@ const QuestionDisplay = ({
 
   return (
     <motion.div
-      key={q.question}
+      key={q.questionText}
       variants={animationVariants}
       initial="hidden"
       animate="visible"
@@ -98,13 +98,13 @@ const QuestionDisplay = ({
     >
       <Fragment>
         <h3 className="w-[80%] text-white m-auto text-center">
-          {q?.question}?
+          {q?.questionText}?
         </h3>
         <h4 className="w-[80%] text-[#9fa1bc] text-sm m-auto text-center mt-3">
           Select the most appropriate option
         </h4>
         <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-5">
-          {q?.options.map((option, index) => (
+          {options.map((option, index) => (
             <div
               key={`opt-${index}`}
               className={`bg-[#383e6e] cursor-pointer transition-all duration-300 text-center py-4 rounded-md text-white shadow-xl ${
