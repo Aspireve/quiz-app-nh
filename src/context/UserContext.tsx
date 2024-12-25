@@ -2,8 +2,8 @@
 
 import LoginDrawer from "@/components/LoginDrawer";
 import { fetchUserByUid } from "@/functions/fetchUserById";
-import { app } from "@/lib/firebase";
-import { getAuth, User } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -31,18 +31,15 @@ export function useUser() {
 }
 
 export function UserProvider({ children }: UserProps) {
-  const [modalDisplay, setModalDisplay] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-  const auth = getAuth(app);
+  const [user, setUser] = useState<User | null>(null);
+  const [modalDisplay, setModalDisplay] = useState<boolean>(false);
 
   useEffect(() => {
-    if (auth.currentUser === null) {
-      setModalDisplay(true);
-    } else {
-      setModalDisplay(false);
+    setModalDisplay(auth.currentUser === null)
+    if (auth.currentUser !== null) {
       fetchUserByUid(auth.currentUser.uid).then((data) => {
-        if (data?.points !== 0) {
+        if (data && data.points) {
           router.push("/points");
         }
       });

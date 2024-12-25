@@ -94,11 +94,11 @@ export default function Home() {
                   : answerArray[index] && "bg-[#1e2139]"
               } shadow-xl flex items-center justify-center text-white shrink-0`}
               onClick={() => {
-                if (currentStep > index + 1) {
-                  toast({
-                    title: "Cannot view Question Now",
+                if (index > answerArray.findIndex(item => item === "")) {
+                  return toast({
+                    title: "You are trying to view an locked question",
                     description:
-                      "You are trying to view an unlocked question.",
+                      "Answer all the previous questions to unlock this question",
                     color: "success",
                   });
                 }

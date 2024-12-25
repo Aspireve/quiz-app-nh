@@ -1,9 +1,4 @@
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  User,
-} from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { Button } from "./ui/button";
 import {
   Drawer,
@@ -13,9 +8,10 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "./ui/drawer";
-import { app } from "@/lib/firebase";
+import { auth } from "@/lib/firebase";
 import { registerUser } from "@/functions/register";
 import { useToast } from "@/hooks/use-toast";
+import { User } from "@prisma/client";
 
 interface LoginDrawerProps {
   modalDisplay: boolean;
@@ -26,29 +22,29 @@ export default function LoginDrawer({
   modalDisplay,
   setUser,
 }: LoginDrawerProps) {
-  
-  const auth = getAuth(app);
   const { toast } = useToast();
   const provider = new GoogleAuthProvider();
 
   const signIn = () => {
+    localStorage.clear();
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        setUser(user); // Set the authenticated user
-        registerUser(user).then(() => {
+        registerUser(user).then((data) => {
+          if (data.error) {
+            throw new Error(data.error);
+          }
+          setUser(data.user);
           toast({
             title: "User Registered",
             description: "User Registered and questions assigned successfully",
-            color: "success",
           });
         });
       })
       .catch((error) => {
         toast({
           title: "Error",
-          description: error.message,
-          color: "error",
+          description: error.message
         });
       });
   };

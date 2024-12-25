@@ -1,3 +1,4 @@
+import { RegisterUserApiReturn } from "@/types/apiTypes";
 import { User } from "firebase/auth";
 
 export const registerUser = async (userData: User) => {
@@ -14,7 +15,7 @@ export const registerUser = async (userData: User) => {
       throw new Error("Failed to register user");
     }
 
-    const data = await response.json();
+    const data: RegisterUserApiReturn = await response.json();
     return data;
   } catch (error) {
     console.error('Error fetching questions:', (error as Error).message);
