@@ -7,7 +7,7 @@ type QuestionDisplayProps = {
   isLast: boolean;
   q: Question;
   setCurrentStep: (value: number | ((prev: number) => number)) => void;
-  setUserScore: () => void;
+  setUserScore: () => Promise<void>;
 };
 
 const QuestionDisplay = ({
@@ -18,8 +18,9 @@ const QuestionDisplay = ({
   setUserScore,
 }: QuestionDisplayProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [finalLoading, setFinalLoading] = useState(false);
 
-  const options = [q.optionA, q.optionB, q.optionC, q.optionD]
+  const options = [q.optionA, q.optionB, q.optionC, q.optionD];
 
   const onSelectOption = (option: string) => {
     setSelectedOption(option);
@@ -48,14 +49,17 @@ const QuestionDisplay = ({
   };
 
   const finalSubmit = () => {
+    setFinalLoading(true);
     setCurrentStep((prevStep) => {
       const userData = JSON.parse(localStorage.getItem("answers") || "{}");
       userData[prevStep] = selectedOption;
       localStorage.setItem("answers", JSON.stringify(userData));
       return prevStep;
-    })
-    setUserScore()
-  }
+    });
+    setUserScore().finally(() => {
+      setFinalLoading(false)
+    });
+  };
 
   const createRipple = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -125,7 +129,7 @@ const QuestionDisplay = ({
               : "bg-gradient-to-r from-[#347cca] to-[#3e9fff] scale-100 opacity-100"
           }`}
           onClick={isLast ? finalSubmit : onSubmit}
-          disabled={selectedOption === null}
+          disabled={selectedOption === null || finalLoading}
         >
           {isLast ? "Submit" : "Next"}
         </button>

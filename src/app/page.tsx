@@ -1,6 +1,7 @@
 "use client";
 
 import QuestionDisplay from "@/components/QuestionDisplay";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/context/UserContext";
 import { fetchUserQuestions } from "@/functions/fetchUserQuestions";
 import { setScoreWithUId } from "@/functions/setScore";
@@ -12,6 +13,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const { user } = useUser();
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [totalLength, settotalLength] = useState<number>(0);
@@ -32,6 +34,7 @@ export default function Home() {
   useEffect(() => {
     if (user) {
       fetchUserQuestions(user.uid).then((data) => {
+        setLoading(false);
         setQuestions(data);
         setCurrentStep(1);
         settotalLength(data.length);
@@ -85,39 +88,59 @@ export default function Home() {
 
         <h1 className="text-white mt-5 text-lg">Hyperloop Quiz</h1>
         <div className="flex overflow-x-scroll mt-3 gap-3 pb-5">
-          {Array.from({ length: totalLength }).map((_, index) => (
-            <div
-              key={index}
-              className={`cursor-pointer w-10 transition-all duration-300 h-10 text-center rounded-full bg-[#393f6e] ${
-                currentStep === index + 1
-                  ? "bg-gradient-to-bl from-[#c23fbc] to-[#b71e84]"
-                  : answerArray[index] && "bg-[#1e2139]"
-              } shadow-xl flex items-center justify-center text-white shrink-0`}
-              onClick={() => {
-                if (index > answerArray.findIndex(item => item === "")) {
-                  return toast({
-                    title: "You are trying to view an locked question",
-                    description:
-                      "Answer all the previous questions to unlock this question",
-                    color: "success",
-                  });
-                }
-                setCurrentStep(index + 1);
-              }}
-            >
-              {index + 1}
-            </div>
-          ))}
+          {loading
+            ? Array.from({ length: 10 }).map((_, idx) => (
+                <Skeleton
+                  key={`skeleton-${idx}`}
+                  className="h-12 w-12 rounded-full shrink-0 shadow-lg"
+                />
+              ))
+            : Array.from({ length: totalLength }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`cursor-pointer w-10 transition-all duration-300 h-10 text-center rounded-full bg-[#393f6e] ${
+                    currentStep === index + 1
+                      ? "bg-gradient-to-bl from-[#c23fbc] to-[#b71e84]"
+                      : answerArray[index] && "bg-[#1e2139]"
+                  } shadow-xl flex items-center justify-center text-white shrink-0`}
+                  onClick={() => {
+                    if (index > answerArray.findIndex((item) => item === "")) {
+                      return toast({
+                        title: "You are trying to view an locked question",
+                        description:
+                          "Answer all the previous questions to unlock this question",
+                        color: "success",
+                      });
+                    }
+                    setCurrentStep(index + 1);
+                  }}
+                >
+                  {index + 1}
+                </div>
+              ))}
         </div>
-        {questions.length > 0 && (
-          <QuestionDisplay
-            key={`que-${currentStep}`}
-            currentStep={currentStep}
-            isLast={currentStep === totalLength}
-            setCurrentStep={setCurrentStep}
-            q={questions[currentStep - 1]}
-            setUserScore={setUserScore}
-          />
+        {loading ? (
+          <>
+            <Skeleton className="h-[100px] w-full rounded-xl shadow-lg" />
+            <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-5">
+              <Skeleton className="h-[60px] w-full rounded-xl shadow-lg" />
+              <Skeleton className="h-[60px] w-full rounded-xl shadow-lg" />
+              <Skeleton className="h-[60px] w-full rounded-xl shadow-lg" />
+              <Skeleton className="h-[60px] w-full rounded-xl shadow-lg" />
+            </div>
+            <Skeleton className="h-[50px] w-full my-5 shadow-lg" />
+          </>
+        ) : (
+          questions.length > 0 && (
+            <QuestionDisplay
+              key={`que-${currentStep}`}
+              currentStep={currentStep}
+              isLast={currentStep === totalLength}
+              setCurrentStep={setCurrentStep}
+              q={questions[currentStep - 1]}
+              setUserScore={setUserScore}
+            />
+          )
         )}
       </div>
     </div>

@@ -12,6 +12,8 @@ import { auth } from "@/lib/firebase";
 import { registerUser } from "@/functions/register";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@prisma/client";
+import { useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 interface LoginDrawerProps {
   modalDisplay: boolean;
@@ -23,10 +25,12 @@ export default function LoginDrawer({
   setUser,
 }: LoginDrawerProps) {
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const provider = new GoogleAuthProvider();
 
   const signIn = () => {
     localStorage.clear();
+    setLoading(true);
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
@@ -44,8 +48,11 @@ export default function LoginDrawer({
       .catch((error) => {
         toast({
           title: "Error",
-          description: error.message
+          description: error.message,
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -63,7 +70,11 @@ export default function LoginDrawer({
             </DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button onClick={signIn}>Sign In with Google</Button>
+            {loading ? (
+              <Skeleton className="h-[30px] w-full rounded-md" />
+            ) : (
+              <Button onClick={signIn}>Sign In with Google</Button>
+            )}
           </DrawerFooter>
         </div>
       </DrawerContent>
