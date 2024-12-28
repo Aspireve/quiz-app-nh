@@ -76,7 +76,22 @@ export default function RootLayout({
         <link
           rel="stylesheet"
           href="https://stijndv.com/fonts/Eudoxus-Sans.css"
-        />
+        /> <title>Hyperloop Quiz App - Test Your Knowledge</title>
+        <meta name="description" content="Challenge yourself with the ultimate Hyperloop Quiz App. Learn about hyperloop technology, engineering, and innovation while competing with friends!" />
+
+
+        <meta property="og:title" content="Hyperloop Quiz App - Test Your Knowledge" />
+        <meta property="og:description" content="Challenge yourself with the ultimate Hyperloop Quiz App. Learn about hyperloop technology, engineering, and innovation while competing with friends!" />
+        <meta property="og:image" content="https://www.nirmaanhyperloop.com/cdn/quiz-thumbnail.jpg" />
+        <meta property="og:url" content="https://www.quiz.nirmaanhyperloop.com" />
+        <meta property="og:type" content="website" />
+
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Hyperloop Quiz App - Test Your Knowledge" />
+        <meta name="twitter:description" content="Challenge yourself with the ultimate Hyperloop Quiz App. Learn about hyperloop technology, engineering, and innovation while competing with friends!" />
+        <meta name="twitter:image" content="https://www.nirmaanhyperloop.com/cdn/quiz-thumbnail.jpg" />
+      
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full bg-gradient-to-br from-[#4e558d] to-[#161931]`}
