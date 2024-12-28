@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// const link = "https://www.quiz.nirmaanhyperloop.com"
+const link = "https://quiz-app-nh.vercel.app/"
+
 export const metadata: Metadata = {
   title: "Hyperloop Quiz App - Test Your Knowledge",
   description:
@@ -36,7 +39,7 @@ export const metadata: Metadata = {
     title: "Hyperloop Quiz App",
     description:
       "Test your knowledge about Hyperloop technology with our engaging quiz app!",
-    url: "https://www.quiz.nirmaanhyperloop.com",
+    url: link,
     type: "website",
     locale: "en_US",
     images: [
