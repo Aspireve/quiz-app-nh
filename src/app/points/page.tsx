@@ -2,6 +2,7 @@
 
 import Confetti from "@/components/Confetti";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@/context/UserContext";
 import { fetchScoreByUid } from "@/functions/fetchScoreByUid";
 import { useRouter } from "next/navigation";
@@ -9,9 +10,11 @@ import React, { useEffect, useState } from "react";
 
 const Page = () => {
   const [score, setScore] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { user } = useUser();
   useEffect(() => {
+    setLoading(true)
     if (user) {
       fetchScoreByUid(user?.uid).then((data) => {
         if (data) {
@@ -19,6 +22,8 @@ const Page = () => {
         } else {
           router.replace("/");
         }
+      }).finally(() => {
+        setLoading(false)
       });
     }
   }, [user]);
@@ -28,15 +33,30 @@ const Page = () => {
       <div className="z-10 px-6 py-6 rounded-xl text-white flex items-center justify-center flex-col gap-4 w-full backdrop-blur-md">
         <Avatar className="h-28 w-28 border-4 border-white">
           <AvatarImage
-            src={`${user?.photoURL || "https://github.com/Aspireve.png"}?dma_cps=sypham`}
+            src={`${
+              user?.photoURL || "https://github.com/Aspireve.png"
+            }?dma_cps=sypham`}
           />
           <AvatarFallback>{user?.displayName || "MO"}</AvatarFallback>
         </Avatar>
         <div className="m-auto text-center flex flex-col gap-2">
           <h2 className="font-normal text-sm">You won</h2>
-          <p className="text-6xl font-bold bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent">
-            {score}
-          </p>
+          {loading ? (
+            <Skeleton className="h-[60px] w-[100px] rounded-md shrink-0 shadow-lg" />
+          ) : (
+            <p
+              className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent"
+              style={{
+                background: "linear-gradient(to right, #FFD700, #B8860B)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                color: "inherit", // Fallback for unsupported environments
+              }}
+            >
+              {score}
+            </p>
+          )}
+
           <p>POINTS</p>
         </div>
         <div className="w-full flex flex-col gap-5">

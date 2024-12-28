@@ -139,6 +139,7 @@ export default function Home() {
               setCurrentStep={setCurrentStep}
               q={questions[currentStep - 1]}
               setUserScore={setUserScore}
+              setLoading={setLoading}
             />
           )
         )}

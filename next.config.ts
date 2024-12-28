@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    domains: ['www.nirmaanhyperloop.com'],
+  },
 };
 
 export default nextConfig;

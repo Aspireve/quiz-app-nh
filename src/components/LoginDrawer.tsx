@@ -34,25 +34,27 @@ export default function LoginDrawer({
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        registerUser(user).then((data) => {
-          if (data.error) {
-            throw new Error(data.error);
-          }
-          setUser(data.user);
-          toast({
-            title: "User Registered",
-            description: "User Registered and questions assigned successfully",
+        registerUser(user)
+          .then((data) => {
+            if (data.error) {
+              throw new Error(data.error);
+            }
+            setUser(data.user);
+            toast({
+              title: "User Registered",
+              description:
+                "User Registered and questions assigned successfully",
+            });
+          })
+          .finally(() => {
+            setLoading(false);
           });
-        });
       })
       .catch((error) => {
         toast({
           title: "Error",
           description: error.message,
         });
-      })
-      .finally(() => {
-        setLoading(false);
       });
   };
 

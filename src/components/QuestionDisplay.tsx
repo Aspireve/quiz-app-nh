@@ -8,6 +8,7 @@ type QuestionDisplayProps = {
   q: Question;
   setCurrentStep: (value: number | ((prev: number) => number)) => void;
   setUserScore: () => Promise<void>;
+  setLoading: (value: boolean) => void;
 };
 
 const QuestionDisplay = ({
@@ -16,9 +17,9 @@ const QuestionDisplay = ({
   isLast,
   currentStep,
   setUserScore,
+  setLoading,
 }: QuestionDisplayProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [finalLoading, setFinalLoading] = useState(false);
 
   const options = [q.optionA, q.optionB, q.optionC, q.optionD];
 
@@ -49,7 +50,7 @@ const QuestionDisplay = ({
   };
 
   const finalSubmit = () => {
-    setFinalLoading(true);
+    setLoading(true);
     setCurrentStep((prevStep) => {
       const userData = JSON.parse(localStorage.getItem("answers") || "{}");
       userData[prevStep] = selectedOption;
@@ -57,7 +58,7 @@ const QuestionDisplay = ({
       return prevStep;
     });
     setUserScore().finally(() => {
-      setFinalLoading(false)
+      setLoading(false);
     });
   };
 
@@ -129,7 +130,7 @@ const QuestionDisplay = ({
               : "bg-gradient-to-r from-[#347cca] to-[#3e9fff] scale-100 opacity-100"
           }`}
           onClick={isLast ? finalSubmit : onSubmit}
-          disabled={selectedOption === null || finalLoading}
+          disabled={selectedOption === null}
         >
           {isLast ? "Submit" : "Next"}
         </button>

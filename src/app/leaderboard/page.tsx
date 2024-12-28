@@ -5,9 +5,13 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { fetchToppers } from "@/functions/fetchToppers";
 import { User } from "@prisma/client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Page = () => {
   const [toppers, setToppers] = useState<User[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     fetchToppers().then((data) => {
@@ -17,11 +21,47 @@ const Page = () => {
     });
   }, []);
   return (
-    <div className="w-[80%] md:w-full max-w-[30rem]  m-auto h-full min-h-[100dvh] mt-7">
+    <div className="relative w-[80%] md:w-full max-w-[30rem]  m-auto h-full min-h-[100dvh] mt-7">
+      <div
+        onClick={() => router.back()}
+        className="cursor-pointer absolute top-0 left-0  bg-gray-400 h-10 w-10 flex items-center justify-center rounded-full shadow-lg"
+      >
+        <Image
+          src="/right-arrow.png"
+          height={15}
+          width={15}
+          alt="nirmaanhyperloop.com"
+          className="rotate-180"
+        />
+      </div>
       <h1 className="bg-gradient-to-r from-[#FFD700] to-[#B8860B] bg-clip-text text-transparent font-semibold text-3xl text-center">
         LEADERBOARD
       </h1>
       <p className="text-white text-center">Top 10 Winners</p>
+      <Link
+        href="https://nirmaanhyperloop.com"
+        className="mt-7 flex flex-row gap-4 justify-between items-center px-4 py-2 backdrop-blur-md mb-4 bg-white/10 shadow-lg rounded-md cursor-pointer"
+      >
+        <Image
+          src="https://www.nirmaanhyperloop.com/cdn/logo.png"
+          height={50}
+          width={50}
+          alt="Nirmaan Hyperloop Logo"
+        />
+        <div className="w-full">
+          <h1 className="text-gray-300 text-sm">To learn more</h1>
+          <h3 className="text-white">Visit nirmaanhyperloop.com</h3>
+        </div>
+        <div className="bg-white h-10 w-20 flex items-center justify-center rounded-full shadow-lg group">
+          <Image
+            src="/right-arrow.png"
+            height={15}
+            width={15}
+            alt="nirmaanhyperloop.com"
+            className="transition-all duration-300 group-hover:-rotate-45"
+          />
+        </div>
+      </Link>
       {/* Three Rankers */}
       <div className="flex flex-row gap-4 justify-around items-end mt-7">
         <motion.div
