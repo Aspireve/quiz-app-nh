@@ -40,7 +40,7 @@ export function UserProvider({ children }: UserProps) {
     if (auth.currentUser !== null) {
       fetchUserByUid(auth.currentUser.uid).then((data) => {
         if (data && data.points) {
-          router.push("/points");
+          router.replace("/points");
         }
       });
     }
