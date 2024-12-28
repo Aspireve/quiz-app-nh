@@ -67,6 +67,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/logo (1).png" sizes="any" />
+        <link rel="apple-touch-icon" href="/logo (1).png" />
         <link rel="preconnect" href="https://stijndv.com" />
         <link
           rel="stylesheet"
