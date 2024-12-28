@@ -14,17 +14,19 @@ const Page = () => {
   const router = useRouter();
   const { user } = useUser();
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     if (user) {
-      fetchScoreByUid(user?.uid).then((data) => {
-        if (data) {
-          setScore(data);
-        } else {
-          router.replace("/");
-        }
-      }).finally(() => {
-        setLoading(false)
-      });
+      fetchScoreByUid(user?.uid)
+        .then((data) => {
+          if (data) {
+            setScore(data);
+          } else {
+            router.replace("/");
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [user]);
   return (
@@ -66,7 +68,20 @@ const Page = () => {
           >
             Leaderboard
           </button>
-          <button className="bg-gradient-to-tr from-[#2e65a6] to-[#3e9fff] text-white w-full py-2 shadow-xl rounded-xl ">
+          <button
+            disabled={!score}
+            onClick={() => { // Replace this with the actual user score dynamically
+              const tweetText = encodeURIComponent(
+                `I just scored ${score} on the Nirmaan Hyperloop Quiz! Find out how much YOU know about Hyperloop technology. Take the quiz now! #HyperloopQuiz #NirmaanHyperloop`
+              );
+              const tweetUrl = encodeURIComponent(
+                "https://www.quiz.nirmaanhyperloop.com"
+              );
+              const twitterShareUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}`;
+              window.open(twitterShareUrl, "_blank");
+            }}
+            className="bg-gradient-to-tr from-[#2e65a6] to-[#3e9fff] text-white w-full py-2 shadow-xl rounded-xl "
+          >
             Share on Twitter
           </button>
         </div>
